@@ -5,10 +5,140 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>测试</title>
+  <style>
+    *{margin: 0;padding: 0;box-sizing: border-box}
+    #navs{
+      display: flex;
+      padding: 0 16px;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      margin-bottom: 10px;
+    }
+    #btns{
+      flex-grow: 1;
+      overflow-x: auto;
+    }
+    #search {
+      flex-shrink: 0;
+      min-width: 170px
+    }
+    button{
+      margin: 0 2px;
+    }
+    #container {
+      text-align: center;
+    }
+    img {
+      border: 1px solid lightskyblue;
+      margin-bottom: 10px;
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
   <script>
     var source = *****
+  </script>
+
+  <script>
+    var sourceLen = source.length
+    var perPage = 20
+    var page = Math.ceil(sourceLen / 20)
+    var curPage = 1
+    var lock = false
+
+    var btns = document.getElementById('btns')
+    var input = document.getElementById('input')
+    var curPageNode = document.getElementById('curpage')
+    var container = document.getElementById('container')
+
+    initBtns(page)
+    initPageNum(page, curPage)
+    showImage(curPage)
+
+    function initBtns(total) {
+      let btnsStr = ''
+      for (let i = 0; i < total; i++) {
+        btnsStr += `<button data-index='${i+1}'>${i+1}</button>`
+      }
+      btns.innerHTML = btnsStr
+    }
+
+    function initPageNum(total, cur) {
+      curPageNode.innerText = cur + '/' + total
+    }
+
+    function showImage(cur) {
+      let images = source.slice(perPage * (cur - 1), perPage * cur)
+      let imgStr = ''
+      for (let i = 0; i < perPage; i++) {
+        imgStr += `<img src='${images[i]}' />`
+      }
+      container.innerHTML = imgStr
+    }
+
+    btns.addEventListener('click', function (e) {
+      let index = e.target.dataset.index
+      if (!index) {
+        return
+      }
+      curPage = index
+      initPageNum(page, curPage)
+      showImage(curPage)
+    })
+
+    input.addEventListener('focus', function () {
+      lock = true
+    })
+    input.addEventListener('blur', function () {
+      lock = false
+    })
+
+    input.addEventListener('keyup', function (e) {
+      if (e.keyCode === 13) {
+        let val = Number(e.target.value)
+        if (isNaN(val) || val > page || val <= 0) {
+          alert('请输入大于 0 小于' + page + '的数字')
+          e.target.value = 0
+          return
+        }
+        val = parseInt(val)
+        curPage = val
+        initPageNum(page, curPage)
+        showImage(curPage)
+      }
+    })
+
+    document.addEventListener('keyup', function (e) {
+      if (lock) {
+        console.log('lock')
+        return
+      }
+      if (e.keyCode === 40) {
+        e.preventDefault()
+        curPage = curPage + 1
+        if (curPage > page) {
+          alert('已经是最后一页')
+          curPage = page
+          return
+        }
+        initPageNum(page, curPage)
+        showImage(curPage)
+      }
+      if (e.keyCode === 38) {
+        e.preventDefault()
+        curPage = curPage - 1
+        if (curPage < 1) {
+          alert('已经是第一页')
+          curPage = 1
+          return
+        }
+        initPageNum(page, curPage)
+        showImage(curPage)
+      }
+    })
   </script>
 </body>
 </html>
