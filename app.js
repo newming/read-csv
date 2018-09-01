@@ -1,6 +1,17 @@
-var fs = require('fs')
+#!/usr/bin/env node
 
-fs.readFile('./3379121-唯品会图片抽样.csv', function (err, data) {
+const fs = require('fs')
+const path = require('path')
+
+const root = process.cwd()
+let filepath = process.argv[2]
+if (!filepath) {
+  console.log('places give a csv file path')
+  return
+}
+filepath = path.resolve(root, process.argv[2])
+
+fs.readFile(filepath, function (err, data) {
   if (err) {
     console.log(err)
     return
@@ -13,20 +24,20 @@ function convert(data) {
   var ary = data.split('\r\n')
 
   ary = ary.map(item => item.replace(/^"""(.+)"""$/, '$1'))
-  fs.readFile('./tpl.html', function (err, tpl) {
+  fs.readFile(path.resolve(__dirname, './tpl.html'), function (err, tpl) {
     if (err) {
       console.log(err)
       return
     }
     tpl = tpl.toString()
-    tpl = tpl.replace('*****', JSON.stringify(ary))
+    tpl = tpl.replace('\'*****\'', JSON.stringify(ary))
 
-    fs.writeFile('index.html', tpl, function (err) {
+    fs.writeFile(path.resolve(root, './index.html'), tpl, function (err) {
       if (err) {
         console.log(err)
         return
       }
-      console.log('fini')
+      console.log('finish')
     })
   })
 }

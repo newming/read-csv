@@ -1,0 +1,25 @@
+{
+  "name": "nxm-csv-reader",
+  "version": "0.0.1",
+  "description": "simple csv reader",
+  "main": "app.js",
+  "bin": {
+    "nxm-csv-reader": "./app.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newming/read-csv.git"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "newming",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/newming/read-csv/issues"
+  },
+  "homepage": "https://github.com/newming/read-csv#readme"
+}
